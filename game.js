@@ -59,6 +59,7 @@ class Actor {
     if (item === this) {
       return false;
     }
+    // лучше разбить на несколько строк
     return this.top < item.bottom && this.bottom > item.top && this.left < item.right && this.right > item.left
   }
 
@@ -120,6 +121,7 @@ class Level {
   }
 
   noMoreActors(item) {
+    // внешние скобки можно опустить
     return !(this.actors.some(actor => actor.type === item));
   }
 
@@ -161,7 +163,9 @@ class LevelParser {
     const resultPlan = [];
     for (let i = 0; i < plan.length; i++) {
       for (let j = 0; j < plan[i].length; j++) {
+        // дублирование логики actorFromSymbol
         const item = this.actorsDict[plan[i][j]];
+        // у typeof скобки можно не писать, это не оператор, а не функция
         if (typeof(item) !== 'function') {
           continue;
         }
@@ -177,6 +181,7 @@ class LevelParser {
   parse(plan) {
     const actors = this.createActors(plan);
     const grid = this.createGrid(plan);
+    // скобки можно опустить
     return(new Level(grid, actors));
   }
 }
@@ -191,6 +196,7 @@ class Fireball extends Actor {
   }
 
   getNextPosition(time = 1) {
+    // лишняя переменная
     const newPosition = new Vector(this.pos.x, this.pos.y);
     return newPosition.plus(this.speed.times(time));
   }
@@ -201,6 +207,7 @@ class Fireball extends Actor {
 
   act(time = 1, plan = new Level()) {
     const newPosition = this.getNextPosition(time);
+    // скобки после ! можно опустить
     if (!(plan.obstacleAt(newPosition, this.size))) {
       this.pos = newPosition;
     } else {
@@ -240,7 +247,9 @@ class FireRain extends Fireball {
 
 class Coin extends Actor {
   constructor(pos = new Vector(0, 0), size = new Vector(1, 1), speed = new Vector(0, 0)) {
+    // лучше использовать метод plus
     super(new Vector(pos.x + 0.2, pos.y + 0.1), new Vector(0.6, 0.6));
+    // лучше использовать метод plus
     this.startPos = new Vector(pos.x + 0.2, pos.y + 0.1);
     this.springSpeed = 8;
     this.springDist = 0.07;
@@ -260,6 +269,7 @@ class Coin extends Actor {
   }
 
   getNextPosition(time = 1) {
+    // лишняя переменная
     let newPosition = new Vector(this.startPos.x, this.startPos.y);
     this.updateSpring(time);
     return newPosition.plus(this.getSpringVector());
